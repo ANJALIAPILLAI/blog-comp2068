@@ -10,5 +10,8 @@ app.get('/about', (req, res)=> {
     res.send(` i like long walks on the beach.`);
 });
 
-app.listen(4000, ()=> console.log('listening on 4000'));
+const port= process.env.PORT || 4000;
+
+
+app.listen(4000, ()=> console.log(`listening on port ${port}`));
 
