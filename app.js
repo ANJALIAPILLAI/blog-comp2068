@@ -8,7 +8,7 @@ app.use('/', routes);
 
 // view configurtaion
 const path = require('path');
-app.set('views', path.join_dirname, 'views');
+app.set('views', path.join__dirname, 'views');
 app.set('view engine', 'pug');
 
 const port= process.env.PORT || 4000;

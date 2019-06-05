@@ -4,6 +4,6 @@ exports.show = (req, res) => {
     // Check if our path is the root or a page
     const path = (req.path === '/') ? '/home' : req.path;
   
-    // Render that path
+    // Render that view
     res.render(`pages${path}`);
-  }
+  };

@@ -1,0 +1,9 @@
+extends ../layouts/main.pug
+
+block globals
+    - const title = "Blogging platform"
+
+block content
+        h1#header= title
+
+        p.intro-text.second-class(data-attr ="my value") it was rainy day
