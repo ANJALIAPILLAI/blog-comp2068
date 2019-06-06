@@ -18,7 +18,9 @@
   },
   "homepage": "https://github.com/ANJALIAPILLAI/blog-comp2068#readme",
   "dependencies": {
+    "dotenv": "^8.0.0",
     "express": "^4.17.1",
+    "mongoose": "^5.5.13",
     "nodemon": "^1.19.1",
     "pug": "^2.0.3"
   }
