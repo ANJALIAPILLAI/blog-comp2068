@@ -15,7 +15,8 @@ exports.index = (req, res) => {
       });
     })
     .catch(err => {
-      console.error(`ERROR: ${err}`);
+      req.flash('error', `ERROR: ${err}`);
+      res.redirect('/');
     });
 };
 
@@ -28,17 +29,23 @@ exports.show = (req, res) => {
       });
     })
     .catch(err => {
-      console.error(`ERROR: ${err}`);
+      req.flash('error', `ERROR: ${err}`);
+      res.redirect('/blogs');
     });
 };
 
 exports.create = (req, res) => {
     Blog.create(req.body.blog)
     .then(() => {
+      req.flash('success', 'New blog was created successfully.');
       res.redirect('/blogs');
     })
     .catch(err => {
-      console.error(`ERROR: ${err}`);
+      req.flash('error', `ERROR: ${err}`);
+      res.render('/blogs/new', {
+        blog: req.body.blog,
+        title: 'New Blog'
+      });
     });
 };
 
@@ -51,7 +58,8 @@ exports.drafts = (req, res) => {
       });
     })
     .catch(err => {
-      console.error(`ERROR: ${err}`);
+      req.flash('error', `ERROR: ${err}`);
+      res.redirect('/blogs');
     });
 };
 
@@ -64,7 +72,8 @@ exports.published = (req, res) => {
       });
     })
     .catch(err => {
-      console.error(`ERROR: ${err}`);
+      req.flash('error', `ERROR: ${err}`);
+      res.redirect('/blogs');
     });
 };
 
@@ -88,10 +97,15 @@ exports.update = (req,res) => {
     runValidators: true
   })
   .then(() => {
+    req.flash('success', 'The blog was updated successfully.');
     res.redirect('/blogs');
   })
   .catch(err => {
-    console.error(`ERROR: ${err}`);
+    req.flash('error', `ERROR: ${err}`);
+      res.render('/blogs/edit', {
+        blog: req.body.blog,
+        title: `Edit ${req.body.blog.title}`
+      });
   });
 };
 
@@ -100,11 +114,13 @@ exports.destroy = (req,res) => {
     _id: req.body.id
   })
   .then(() => {
+    req.flash('success', 'The blog was deleted successfully.');
     res.redirect('/blogs');
   })
   .catch(err => {
-    console.error(`ERROR: ${err}`);
+    req.flash('error', `ERROR: ${err}`);
+    res.redirect(`/blogs`);
   });
 };
 
-model.updateOne({filter: value}, {set1: value, set2: value}, {option: value});
+ 
