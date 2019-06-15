@@ -15,6 +15,11 @@ const BlogSchema = new mongoose.Schema({
     type: String,
     enum: ['DRAFT', 'PUBLISHED'],
     default: 'DRAFT'
+  },
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Author',
+    required: true
   }
 }, {
   timestamps: true // we want timestamps to keep track of when our blogs were created

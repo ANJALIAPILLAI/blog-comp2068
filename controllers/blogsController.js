@@ -1,13 +1,19 @@
 const Blog = require('../models/blog');
 
 exports.new = (req, res) => {
-    res.render('blogs/new'),{
-        title: 'New Blog Post'
-    }
+  req.isAuthenticated();
+
+  res.render('blogs/new'),{
+    title: 'New Blog Post'
+  }
 };
 
 exports.index = (req, res) => {
-    Blog.find()
+  req.isAuthenticated();
+  Blog.find({
+    author: req.session.userId
+  })
+  .populate('author')
     .then(blogs => {
       res.render('blogs/index', {
         blogs: blogs,
@@ -21,7 +27,11 @@ exports.index = (req, res) => {
 };
 
 exports.show = (req, res) => {
-    Blog.findById(req.params.id)
+  req.isAuthenticated();
+    Blog.findOne({
+      _id: req.params.id,
+      author: req.session.userId
+    })
     .then(blog => {
       res.render('blogs/show', {
         blog: blog,
@@ -35,6 +45,10 @@ exports.show = (req, res) => {
 };
 
 exports.create = (req, res) => {
+  req.isAuthenticated();
+  // Add the current author to the blog
+  req.body.blog.author = req.session.userId;
+  
     Blog.create(req.body.blog)
     .then(() => {
       req.flash('success', 'New blog was created successfully.');
@@ -50,7 +64,10 @@ exports.create = (req, res) => {
 };
 
 exports.drafts = (req, res) => {
-    Blog.find().drafts()
+  req.isAuthenticated();
+    Blog.find({
+      author: req.session.userId
+    }).drafts()
     .then(drafts => {
       res.render('blogs/index', {
         blogs: drafts,
@@ -64,7 +81,10 @@ exports.drafts = (req, res) => {
 };
 
 exports.published = (req, res) => {
-    Blog.find().published()
+  req.isAuthenticated();
+    Blog.find({
+      author: req.session.userId
+    }).published()
     .then(published => {
       res.render('blogs/index', {
         blogs: published,
@@ -78,7 +98,11 @@ exports.published = (req, res) => {
 };
 
 exports.edit = (req,res) => {
-  Blog.findById(req.params.id)
+  req.isAuthenticated();
+  Blog.findOne({
+    _id: req.params.id,
+    author: req.session.userId
+  })
     .then(blog => {
       res.render('blogs/edit', {
         title: `Edit ${blog.title}`,
@@ -91,8 +115,10 @@ exports.edit = (req,res) => {
 };
 
 exports.update = (req,res) => {
+  req.isAuthenticated();
   Blog.updateOne({
-    _id: req.body.id
+    _id: req.body.id,
+    author: req.session.userId
   }, req.body.blog, {
     runValidators: true
   })
@@ -110,8 +136,10 @@ exports.update = (req,res) => {
 };
 
 exports.destroy = (req,res) => {
+  req.isAuthenticated();
   Blog.deleteOne({
-    _id: req.body.id
+    _id: req.body.id,
+    author: req.session.userId
   })
   .then(() => {
     req.flash('success', 'The blog was deleted successfully.');

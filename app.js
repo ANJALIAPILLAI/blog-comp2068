@@ -47,9 +47,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-//our routes
-const routes = require('./routes.js');
-app.use('/', routes);
+
 
 // view configurtaion
 const path = require('path');
@@ -58,6 +56,27 @@ app.set('view engine', 'pug');
 app.use('/css', express.static('assets/stylesheets'));
 app.use('/js', express.static('assets/javascripts'));
 app.use('/images', express.static('assets/images'));
+
+//authentication helper
+const isAuthenticated = (req) => {
+  return req.session && req.session.userId;
+};
+app.use((req, res, next) => {
+  req.isAuthenticated = () => {
+    if (!isAuthenticated(req)) {
+      req.flash('error', `You are not permitted to do this action.`);
+      res.redirect('/');
+    }
+  }
+
+  res.locals.isAuthenticated = isAuthenticated(req);
+  next();
+});
+
+//our routes
+const routes = require('./routes.js');
+app.use('/', routes);
+
 
 const port= process.env.PORT || 4000;
 app.listen(port, ()=> console.log(`listening on port ${port}`));
